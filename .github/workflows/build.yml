@@ -23,16 +23,19 @@ jobs:
       
       - name: Setup Matrixx Source and Local Manifest
         run: |
-          # 1. GitHub Actions के हिडन टोकन और हेडर्स को पूरी तरह डिलीट करना (Crucial Fix)
+          # 1. गिटहब के छिपे हुए ऑथेंटिकेशन हेडर को पूरी तरह ब्लॉक करना (Permanent Fix)
           git config --global --unset-all http.https://github.com || true
+          git config --local --unset-all http.https://github.com || true
+          
+          # गिट क्रेडेंशियल्स को पूरी तरह न्यूट्रल करना
           git config --global user.name "Ram999000"
           git config --global user.email "ram@example.com"
           git config --global credential.helper ""
           
-          # 2. Project Matrixx 15 Source को इनिशियलाइज़ करना
-          repo init -u https://github.com -b 15.0 --depth=1
+          # 2. Project Matrixx 15 Source को इनिशियलाइज़ करना (--no-clone-bundle फ्लैग के साथ)
+          repo init -u https://github.com -b 15.0 --depth=1 --no-clone-bundle
           
-          # 3. आपका कस्टम लोकल मैनिफ़ेस्ट इन्जेक्ट करना
+          # 3. आपका कस्टम लोकल मैनिफ़ेस्ट डाउनलोड करना
           mkdir -p .repo/local_manifests
           curl -L -o .repo/local_manifests/matrixx.xml https://githubusercontent.com
           
@@ -41,7 +44,6 @@ jobs:
 
       - name: Build ROM
         run: |
-          # बिल्ड स्क्रिप्ट के लिए भी हेडर साफ़ रखना
           git config --global --unset-all http.https://github.com || true
           chmod +x build.sh
           ./build.sh "${{ github.event.inputs.target }}" "${{ github.event.inputs.variant }}"
