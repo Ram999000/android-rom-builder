@@ -19,14 +19,12 @@ jobs:
       - name: Install deps
         run: |
           sudo apt update
-          sudo apt install -y build-essential openjdk-11-jdk git-core gnupg flex bison gperf curl
+          sudo apt install -y build-essential openjdk-11-jdk git-core gnupg flex bison gperf curl repo
       
       - name: Setup Matrixx Source and Local Manifest
         run: |
-          mkdir -p ~/bin
-          curl https://googleapis.com > ~/bin/repo
-          chmod a+x ~/bin/repo
-          export PATH=~/bin:$PATH
+          git config --global user.name "Ram999000"
+          git config --global user.email "ram@example.com"
           
           repo init -u https://github.com -b 15.0 --git-lfs --depth=1
           mkdir -p .repo/local_manifests
@@ -35,7 +33,6 @@ jobs:
 
       - name: Build ROM
         run: |
-          export PATH=~/bin:$PATH
           chmod +x build.sh
           ./build.sh "${{ github.event.inputs.target }}" "${{ github.event.inputs.variant }}"
       
