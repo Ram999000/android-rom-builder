@@ -19,23 +19,17 @@ jobs:
       - name: Install deps
         run: |
           sudo apt update
-          sudo apt install -y build-essential openjdk-11-jdk git-core gnupg flex bison gperf curl git git-lfs
+          sudo apt install -y build-essential openjdk-11-jdk git-core gnupg flex bison gperf curl git git-lfs repo
       
-      - name: Setup Latest Repo Tool and Sync Source
+      - name: Setup Matrixx Source and Local Manifest
         run: |
           # Git configuration to bypass auth errors
           git config --global user.name "Ram999000"
           git config --global user.email "ram@example.com"
           git config --global credential.helper ""
           
-          # Downloading the official latest repo tool binary
-          mkdir -p ~/bin
-          curl https://googleapis.com > ~/bin/repo
-          chmod a+x ~/bin/repo
-          export PATH=~/bin:$PATH
-          
-          # Initializing Project Matrixx 15 Source
-          repo init --depth=1 --no-repo-verify -u https://github.com -b 15.0
+          # Initializing Project Matrixx 15 Source using system repo
+          repo init -u https://github.com -b 15.0 --depth=1
           
           # Injecting your custom device tree local manifest
           mkdir -p .repo/local_manifests
@@ -46,7 +40,6 @@ jobs:
 
       - name: Build ROM
         run: |
-          export PATH=~/bin:$PATH
           chmod +x build.sh
           ./build.sh "${{ github.event.inputs.target }}" "${{ github.event.inputs.variant }}"
       
