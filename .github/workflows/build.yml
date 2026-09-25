@@ -19,7 +19,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt update
-          sudo apt install -y build-essential openjdk-11-jdk git-core gnupg flex bison gperf curl git lfs
+          sudo apt install -y build-essential openjdk-11-jdk git-core gnupg flex bison gperf curl git git-lfs
       
       - name: Setup Latest Repo Tool and Sync Source
         run: |
