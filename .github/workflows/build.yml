@@ -23,20 +23,20 @@ jobs:
       
       - name: Setup Matrixx Source and Local Manifest
         run: |
-          # गिटहब के टोकन एरर को रोकने के लिए
+          # गिटहब टोकन एरर को लोकल लेवल पर रोकने का परमानेंट इलाज
           git config --global --unset-all http.https://github.com || true
           
           git config --global user.name "Ram999000"
           git config --global user.email "ram@example.com"
           
-          # 1. GitHub टोकन एरर को पूरी तरह बाईपास करने के लिए GitLab URL का उपयोग
-          repo init -u https://gitlab.com -b 15.0 --depth=1
+          # 1. बिना किसी ऑथेंटिकेशन टोकन के सिंक करने के लिए कस्टमाइज्ड यूआरएल
+          repo init -u https://github.com/ProjectMatrixx/android -b 15.0 --depth=1 --groups=default,-mips,-x86,-darwin
           
           # 2. आपका लोकल मैनिफ़ेस्ट डाउनलोड करना
           mkdir -p .repo/local_manifests
           curl -L -o .repo/local_manifests/matrixx.xml https://githubusercontent.com
           
-          # 3. सुरक्षित सोर्स कोड सिंक
+          # 3. फ़ोर्स सिंक जो गिटहब एक्स्ट्रा हेडर को बायपास करेगा
           repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
       - name: Build ROM
