@@ -23,16 +23,16 @@ jobs:
       
       - name: Setup Matrixx Source and Local Manifest
         run: |
-          # गिटहब एक्शन्स के एक्स्ट्रा हेडर टोकन को पूरी तरह डिलीट करना ताकि एरर न आए
+          # गिटहब के डिफ़ॉल्ट हेडर टोकन को रिमूव करना
           git config --global --unset-all http.https://github.com || true
           
           git config --global user.name "Ram999000"
           git config --global user.email "ram@example.com"
           
-          # 1. Project Matrixx 15 Source को इनिशियलाइज़ करना
-          repo init -u https://github.com -b 15.0 --depth=1
+          # 1. git:// प्रोटोकॉल का उपयोग करके Matrixx 15 Source को इनिशियलाइज़ करना (टोकन एरर को बाईपास करने के लिए)
+          repo init -u git://://github.com -b 15.0 --depth=1
           
-          # 2. आपका सुधारा हुआ लोकल मैनिफ़ेस्ट डाउनलोड करना
+          # 2. आपका लोकल मैनिफ़ेस्ट डाउनलोड करना
           mkdir -p .repo/local_manifests
           curl -L -o .repo/local_manifests/matrixx.xml https://githubusercontent.com
           
