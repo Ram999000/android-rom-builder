@@ -23,22 +23,22 @@ jobs:
       
       - name: Setup Matrixx Source and Local Manifest
         run: |
-          # 1. गिटहब के छिपे हुए टोकन हेडर्स को जड़ से साफ़ करना
+          # गिटहब के छिपे हुए टोकन को डिलीट करना
           git config --global --unset-all http.https://github.com || true
           
           git config --global user.name "Ram999000"
           git config --global user.email "ram@example.com"
           
-          # 2. मैनिफ़ेस्ट फ़ोल्डर मैन्युअली बनाकर सीधे प्रोजेक्ट मैट्रिक्स को क्लोन करना (टोकन एरर को बाईपास करने के लिए)
+          # 1. गिटलैब के एक्टिव और पब्लिक रिपोजिटरी पाथ से डायरेक्ट क्लोन करना
           mkdir -p .repo/manifests
-          git clone https://github.com -b 15.0 .repo/manifests
+          git clone https://gitlab.com .repo/manifests -b 15.0
           ln -sf .repo/manifests/default.xml .repo/manifest.xml
           
-          # 3. आपका लोकल मैनिफ़ेस्ट डाउनलोड करना (Spelling fixed)
+          # 2. आपका लोकल मैनिफ़ेस्ट डाउनलोड करना
           mkdir -p .repo/local_manifests
           curl -L -o .repo/local_manifests/matrixx.xml https://githubusercontent.com
           
-          # 4. सोर्स कोड सुरक्षित सिंक करना
+          # 3. सोर्स कोड सुरक्षित सिंक करना
           repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
       - name: Build ROM
