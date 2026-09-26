@@ -23,24 +23,25 @@ jobs:
       
       - name: Setup Matrixx Source and Local Manifest
         run: |
-          # गिटहब के डिफ़ॉल्ट हेडर टोकन को रिमूव करना
+          # गिटहब के हिडन ऑथेंटिकेशन हेडर को ब्लॉक करने की सबसे मजबूत कमांड
           git config --global --unset-all http.https://github.com || true
           
           git config --global user.name "Ram999000"
           git config --global user.email "ram@example.com"
           
-          # 1. git:// प्रोटोकॉल का उपयोग करके Matrixx 15 Source को इनिशियलाइज़ करना (टोकन एरर को बाईपास करने के लिए)
-          repo init -u git://://github.com -b 15.0 --depth=1
+          # 1. आर्काइव्ड रिपॉजिटरी के ऑथेंटिकेशन को बाईपास करने के लिए बिना टोकन वाला यूआरएल सिंटैक्स
+          repo init --depth=1 --no-repo-verify -u https://github.com -b 15.0
           
-          # 2. आपका लोकल मैनिफ़ेस्ट डाउनलोड करना
+          # 2. आपका लोकल मैनिफ़ेस्ट फ़ोल्डर बनाकर डाउनलोड करना
           mkdir -p .repo/local_manifests
           curl -L -o .repo/local_manifests/matrixx.xml https://githubusercontent.com
           
-          # 3. सोर्स कोड सिंक करना
+          # 3. नेटवर्क ब्लॉक को हटाकर सेफ सिंक करना
           repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
       - name: Build ROM
         run: |
+          git config --global --unset-all http.https://github.com || true
           chmod +x build.sh
           ./build.sh "${{ github.event.inputs.target }}" "${{ github.event.inputs.variant }}"
       
